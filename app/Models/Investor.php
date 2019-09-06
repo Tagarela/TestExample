@@ -18,9 +18,9 @@ class Investor extends BaseModel
     private $wallet;
 
     /**
-     * @var Tranche[]
+     * @var Transaction[]
      */
-    private $trancheList = [];
+    private $transactionList = [];
 
     /**
      * Investor constructor.
@@ -73,6 +73,16 @@ class Investor extends BaseModel
      */
     public function addTransaction(Transaction $transaction): void
     {
-        $this->trancheList[] = $transaction;
+        $this->transactionList[] = $transaction;
+    }
+
+    /**
+     * Get all invest transactions
+     *
+     * @return array
+     */
+    public function getTransactions(): array
+    {
+        return $this->transactionList;
     }
 }

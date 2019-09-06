@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Managers;
 
+use App\Helpers\DateHelper;
 use App\Models\Investor;
 use App\Models\Tranche;
 use App\Models\Transaction;
@@ -47,6 +48,7 @@ class InvestorManager
         $investor->chargeAmount($transaction->getAmount());
 
         $transaction->setStatus(Transaction::STATUS_SUCCESS);
+        $transaction->setPayDate(DateHelper::getCurrentDateTime());
         $investor->addTransaction($transaction);
 
         return $investor;
@@ -69,5 +71,37 @@ class InvestorManager
         return $transaction;
     }
 
+    public static function calculateInvestProfit(Investor $investor)
+    {
+        $profit = 0;
+        $transactions = $investor->getTransactions();
 
+        foreach($transactions as $transaction){
+            self::calculateTransactionAmount($transaction);
+            die();
+            $transactionDate = $transaction->getPayDate();
+            $transactionAmount = $transaction->getAmount();
+
+
+            var_dump($transaction);
+            die();
+        }
+    }
+
+    public static function calculateTransactionAmount($transaction)
+    {
+        $transactionDate = $transaction->getPayDate();
+        $transactionAmount = $transaction->getAmount();
+        $percentage = $transaction->getTranche()->getPercentage();
+
+        $currentMonthDays = DateHelper::getNumberOfCurrentMonthDays();
+        $amountPerDay = ($transactionAmount * $percentage)/100;
+
+        var_dump($amountPerDay);
+        die();
+        var_dump($transactionDate);
+        var_dump( intval($transactionDate->format('d')));
+
+
+    }
 }

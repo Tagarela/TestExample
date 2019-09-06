@@ -91,6 +91,16 @@ class Tranche extends BaseModel
     }
 
     /**
+     * Get percentage
+     *
+     * @return int
+     */
+    public function getPercentage()
+    {
+        return $this->percentage;
+    }
+
+    /**
      * Add transaction
      *
      * @param Transaction $transaction

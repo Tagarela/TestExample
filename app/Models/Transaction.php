@@ -95,6 +95,16 @@ class Transaction extends BaseModel
     }
 
     /**
+     * Set pay Date
+     *
+     * @param \DateTime $payDate
+     */
+    public function setPayDate(\DateTime $payDate): void
+    {
+        $this->payDate = $payDate;
+    }
+
+    /**
      * Get status
      *
      * @return int
@@ -129,7 +139,7 @@ class Transaction extends BaseModel
      *
      * @return \DateTime
      */
-    public function getPayDate(): \DateTime
+    public function getPayDate(): ?\DateTime
     {
         return $this->payDate;
     }
