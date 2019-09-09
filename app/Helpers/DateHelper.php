@@ -50,24 +50,4 @@ class DateHelper
         return self::getNumberOfMonthDays($currentDate);
     }
 
-    /**
-     * TODO
-     *
-     * @param \DateTime $date
-     */
-    public static function getMonthlyWorkDays(\DateTime $date)
-    {
-        $currentDate = self::getCurrentDateTime();
-        $currentMonthMaxDays = self::getNumberOfCurrentMonthDays();
-
-        if($currentDate->format('m') == $date->format('m')){
-            $currentMonthMaxDays - intval($date->format('d'));
-            var_dump($currentMonthMaxDays);die('!!!!');
-        }
-
-        var_dump($currentDate->format('m'));
-        var_dump($date->format('m'));
-        var_dump($date);die();
-    }
-
 }

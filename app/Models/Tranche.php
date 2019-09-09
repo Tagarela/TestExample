@@ -32,9 +32,9 @@ class Tranche extends BaseModel
     private $transactions = [];
 
     /**
-     * @var Load
+     * @var Loan
      */
-    private $load;
+    private $loan;
 
     /**
      * Tranche constructor.
@@ -71,23 +71,23 @@ class Tranche extends BaseModel
     }
 
     /**
-     * Set Load
+     * Set Loan
      *
-     * @param Load $load
+     * @param Loan $loan
      */
-    public function setLoad(Load $load): void
+    public function setLoan(Loan $loan): void
     {
-        $this->load = $load;
+        $this->loan = $loan;
     }
 
     /**
-     * Get Load
+     * Get Loan
      *
-     * @return Load
+     * @return Loan
      */
-    public function getLoad(): Load
+    public function getLoan(): Loan
     {
-        return $this->load;
+        return $this->loan;
     }
 
     /**

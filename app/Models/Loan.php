@@ -6,11 +6,11 @@ namespace App\Models;
 use App\Helpers\DateHelper;
 
 /**
- * Class Load
+ * Class Loan
  *
  * @package App\Models
  */
-class Load extends BaseModel
+class Loan extends BaseModel
 {
     /**
      * @var int
@@ -23,14 +23,20 @@ class Load extends BaseModel
     private $endDate;
 
     /**
-     * Load constructor.
+     * Loan constructor.
      *
      * @param \DateTime $startDate
      * @param \DateTime $endDate
+     *
+     * @throws \ErrorException
      */
     public function __construct(\DateTime $startDate, \DateTime $endDate)
     {
         parent::__construct();
+        if ($startDate > $endDate) {
+            throw new \ErrorException('Incorrect load start/end time');
+        }
+
         $this->startDate = $startDate;
         $this->endDate = $endDate;
     }
@@ -56,7 +62,7 @@ class Load extends BaseModel
     }
 
     /**
-     * Is Load still open
+     * Is Loan still open
      */
     public function isOpen()
     {
