@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helpers\DateHelper;
+use Carbon\Carbon;
 
 /**
  * Class Loan
@@ -13,24 +14,24 @@ use App\Helpers\DateHelper;
 class Loan extends BaseModel
 {
     /**
-     * @var int
+     * @var Carbon
      */
     private $startDate;
 
     /**
-     * @var int
+     * @var Carbon
      */
     private $endDate;
 
     /**
      * Loan constructor.
      *
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
+     * @param Carbon $startDate
+     * @param Carbon $endDate
      *
      * @throws \ErrorException
      */
-    public function __construct(\DateTime $startDate, \DateTime $endDate)
+    public function __construct(Carbon $startDate, Carbon $endDate)
     {
         parent::__construct();
         if ($startDate > $endDate) {
@@ -44,7 +45,7 @@ class Loan extends BaseModel
     /**
      * Start Date
      *
-     * @return \DateTime|int
+     * @return Carbon
      */
     public function getStartDate()
     {

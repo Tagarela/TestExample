@@ -5,8 +5,10 @@ namespace App\Managers;
 
 use App\Helpers\DateHelper;
 use App\Models\Investor;
+use App\Models\Loan;
 use App\Models\Tranche;
 use App\Models\Transaction;
+use Carbon\Carbon;
 
 /**
  * Class InvestorManager
@@ -19,20 +21,17 @@ class InvestorManager
      * Make an investment
      *
      * @param Investor $investor
+     * @param Tranche $tranche
      * @param Transaction $transaction
      *
      * @return Investor
      *
      * @throws \ErrorException
      */
-    public static function invest(Investor $investor, Transaction $transaction): Investor
+    public static function invest(Investor &$investor, Tranche &$tranche, Transaction &$transaction): Investor
     {
-        $tranche = $transaction->getTranche();
-        if (!isset($tranche)) {
-            throw new \ErrorException('something went wrong');
-        }
-
         $loan = $tranche->getLoan();
+
         if (!isset($loan)) {
             throw new \ErrorException('something went wrong');
         }
@@ -49,9 +48,28 @@ class InvestorManager
 
         $transaction->setStatus(Transaction::STATUS_SUCCESS);
         $transaction->setPayDate(DateHelper::getCurrentDateTime());
+
         $investor->addTransaction($transaction);
+        $tranche->addTransaction($transaction);
 
         return $investor;
+    }
+
+    /**
+     * Create tranche
+     *
+     * @param Loan $loan
+     * @param float $maxAmount
+     * @param int $percentage
+     *
+     * @return Tranche
+     */
+    public static function createTranche(Loan $loan, float $maxAmount, int $percentage): Tranche
+    {
+        $tranche = new Tranche($maxAmount, $percentage);
+        $tranche->setLoan($loan);
+
+        return $tranche;
     }
 
     /**
@@ -61,9 +79,15 @@ class InvestorManager
      * @param int $amount
      *
      * @return Transaction
+     *
+     * @throws \ErrorException
      */
     public static function createTransaction(Tranche $tranche, int $amount): Transaction
     {
+//        /*** check if it possible to create transaction ***/
+//        if ($tranche->calculateAmountOfTransactions() + $amount > $tranche->getMaxAmount()){
+//            throw new \ErrorException("Max tranche amount error");
+//        }
         $transaction = new Transaction($amount);
         $transaction->setTranche($tranche);
         $transaction->setStatus(Transaction::STATUS_CREATED);
@@ -73,11 +97,13 @@ class InvestorManager
 
     /**
      * Calculate investor monthly profit by date
+     *
      * @param Investor $investor
-     * @param \DateTime $date
+     * @param Carbon $date
+     *
      * @return float
      */
-    public static function calculateInvestMonthlyProfitByDate(Investor $investor, \DateTime $date): float
+    public static function calculateInvestMonthlyProfitByDate(Investor $investor, Carbon $date): float
     {
         $profit = 0;
         $transactions = $investor->getTransactions();
@@ -90,14 +116,14 @@ class InvestorManager
     }
 
     /**
-     * Claculate profit of one transaction
+     * Calculate profit of one transaction
      *
      * @param Transaction $transaction
-     * @param \DateTime $date
+     * @param Carbon $date
      *
      * @return float
      */
-    public static function getTransactionProfit(Transaction $transaction, \DateTime $date): float
+    public static function getTransactionProfit(Transaction $transaction, Carbon $date): float
     {
         $transactionPercentageAmount = self::getTransactionPercentageAmount($transaction);
         $transactionDays = self::getCountOfMonthlyTransactionDaysByDate($transaction, $date);
@@ -110,6 +136,7 @@ class InvestorManager
      * Convert transaction percentage to amount
      *
      * @param Transaction $transaction
+     *
      * @return float
      */
     public static function getTransactionPercentageAmount(Transaction $transaction): float
@@ -121,11 +148,13 @@ class InvestorManager
      * Get the number of transaction days in a month before the date
      *
      * @param Transaction $transaction
-     * @param \DateTime $date
+     * @param Carbon $date
+     *
      * @return int
+     *
      * @throws \ErrorException
      */
-    public static function getCountOfMonthlyTransactionDaysByDate(Transaction $transaction, \DateTime $date): int
+    public static function getCountOfMonthlyTransactionDaysByDate(Transaction $transaction, Carbon $date): int
     {
         $tranche = $transaction->getTranche();
         if (!isset($tranche)) {
@@ -139,7 +168,7 @@ class InvestorManager
         $transactionPayDate = $transaction->getPayDate();
 
         if ($date < $transactionPayDate) {
-            throw new \ErrorException('transaction wasn\'t paid');
+            throw new \ErrorException('transaction doesn\'t exit for this date');
         }
         /*** check loan valid ***/
         if ($loanEndDate < $date) {

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
+
 /**
  * Class DateHelper
  *
@@ -13,29 +15,26 @@ class DateHelper
     /**
      * Get current dateTime
      *
-     * @return \DateTime
+     * @return Carbon
      */
-    public static function getCurrentDateTime(): \DateTime
+    public static function getCurrentDateTime(): Carbon
     {
-        $currentDate = new \DateTime();
-        $currentDate->setTimezone(new \DateTimeZone('UTC'));
-
-        return $currentDate;
+        return Carbon::now(new \DateTimeZone('UTC'));
     }
 
     /**
      * Get number of days in the month by date
      *
-     * @param \DateTime $date
+     * @param Carbon $date
      *
      * @return int
      */
-    public static function getNumberOfMonthDays(\DateTime $date)
+    public static function getNumberOfMonthDays(Carbon $date): int
     {
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
-        return cal_days_in_month(CAL_GREGORIAN,$month,$year);
+        return cal_days_in_month(CAL_GREGORIAN, $month, $year);
     }
 
     /**
@@ -43,7 +42,7 @@ class DateHelper
      *
      * @return int
      */
-    public static function getNumberOfCurrentMonthDays()
+    public static function getNumberOfCurrentMonthDays(): int
     {
         $currentDate = self::getCurrentDateTime();
 

@@ -101,6 +101,16 @@ class Tranche extends BaseModel
     }
 
     /**
+     * Get max amount
+     *
+     * @return float
+     */
+    public function getMaxAmount()
+    {
+        return $this->maxAmount;
+    }
+
+    /**
      * Add transaction
      *
      * @param Transaction $transaction
@@ -109,7 +119,7 @@ class Tranche extends BaseModel
      */
     public function addTransaction(Transaction $transaction): void
     {
-        $currentAmount = $this->calculateAmountOfTransaction();
+        $currentAmount = $this->calculateAmountOfTransactions();
         $transactionAmount = $transaction->getAmount();
         if ($currentAmount + $transactionAmount > $this->maxAmount){
             throw new \ErrorException("Max tranche amount error");
@@ -122,12 +132,13 @@ class Tranche extends BaseModel
      *
      * @return int
      */
-    public function calculateAmountOfTransaction(): int
+    public function calculateAmountOfTransactions(): int
     {
         $amount = 0;
         foreach ($this->transactions as $transaction) {
-            $amount += $transaction->amount;
+            $amount += $transaction->getAmount();
         }
+
         return $amount;
     }
 }
