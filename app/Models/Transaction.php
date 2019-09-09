@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 /**
  * Class Tranche
  *
@@ -97,9 +99,9 @@ class Transaction extends BaseModel
     /**
      * Set pay Date
      *
-     * @param \DateTime $payDate
+     * @param Carbon $payDate
      */
-    public function setPayDate(\DateTime $payDate): void
+    public function setPayDate(Carbon $payDate): void
     {
         $this->payDate = $payDate;
     }
@@ -137,9 +139,9 @@ class Transaction extends BaseModel
     /**
      * Get Transaction Pay Date
      *
-     * @return \DateTime
+     * @return Carbon
      */
-    public function getPayDate(): ?\DateTime
+    public function getPayDate(): ?Carbon
     {
         return $this->payDate;
     }
