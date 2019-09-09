@@ -166,6 +166,9 @@ class InvestorManager
         }
         $loanEndDate = $loan->getEndDate();
         $transactionPayDate = $transaction->getPayDate();
+        if(!isset($transactionPayDate)){
+            throw new \ErrorException('transaction wasn\'t paid');
+        }
 
         if ($date < $transactionPayDate) {
             throw new \ErrorException('transaction doesn\'t exit for this date');
